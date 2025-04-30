@@ -1,6 +1,7 @@
 ﻿using DevFreela.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace DevFreela.API.Controllers
 {
@@ -8,6 +9,11 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
+        private readonly FreelanceTotalCostConfig _TotalCostConfig;
+        public ProjectsController(IOptions<FreelanceTotalCostConfig> options)
+        {
+            _TotalCostConfig = options.Value;
+        }
         //GET api/projects?search=crm
         [HttpGet]
         public IActionResult GetAll(string search = "")
@@ -26,6 +32,12 @@ namespace DevFreela.API.Controllers
         [HttpPost]
         public IActionResult Post(ProjectCreateInputModel model)
         {
+            if (model.TotalCost < _TotalCostConfig.Minimum ||
+                model.TotalCost > _TotalCostConfig.Maximum)
+            {
+                return BadRequest($"Valor do projeto fora do intervalo permitido." +
+                    $" Deve estar entre {_TotalCostConfig.Minimum} e {_TotalCostConfig.Maximum}.");
+            }
             return CreatedAtAction(nameof(GetById), new { id = 1 }, null);
         }
 
