@@ -1,4 +1,5 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -9,22 +10,25 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly FreelanceTotalCostConfig _TotalCostConfig;
-        public ProjectsController(IOptions<FreelanceTotalCostConfig> options)
+        private readonly FreelanceTotalCostConfig _totalCostConfig;
+        private readonly IConfigService _configService;
+        public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigService configService)
         {
-            _TotalCostConfig = options.Value;
+            _totalCostConfig = options.Value;
+            _configService = configService;
         }
         //GET api/projects?search=crm
         [HttpGet]
         public IActionResult GetAll(string search = "")
         {
-            return Ok();
+            return Ok(_configService.GetValue());
         }
 
         //GET api/projects/23
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            
             return Ok();
         }
 
@@ -32,11 +36,11 @@ namespace DevFreela.API.Controllers
         [HttpPost]
         public IActionResult Post(ProjectCreateInputModel model)
         {
-            if (model.TotalCost < _TotalCostConfig.Minimum ||
-                model.TotalCost > _TotalCostConfig.Maximum)
+            if (model.TotalCost < _totalCostConfig.Minimum ||
+                model.TotalCost > _totalCostConfig.Maximum)
             {
                 return BadRequest($"Valor do projeto fora do intervalo permitido." +
-                    $" Deve estar entre {_TotalCostConfig.Minimum} e {_TotalCostConfig.Maximum}.");
+                    $" Deve estar entre {_totalCostConfig.Minimum} e {_totalCostConfig.Maximum}.");
             }
             return CreatedAtAction(nameof(GetById), new { id = 1 }, null);
         }
