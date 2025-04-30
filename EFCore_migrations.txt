@@ -1,0 +1,2 @@
+dotnet ef migrations add PrimeiraMigration -o Persistence/Migrations -s ../DevFreela.API
+dotnet ef database update -s ../DevFreela.API
