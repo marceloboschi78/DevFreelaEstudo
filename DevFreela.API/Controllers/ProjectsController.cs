@@ -11,25 +11,32 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly FreelanceTotalCostConfig _totalCostConfig;
-        private readonly IConfigService _configService;        
-        public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigService configService)
+        //private readonly FreelanceTotalCostConfig _totalCostConfig;
+        //private readonly IConfigService _configService;        
+        //public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigService configService)
+        //{
+        //    _totalCostConfig = options.Value;
+        //    _configService = configService;
+        //}
+
+        public ProjectsController()
         {
-            _totalCostConfig = options.Value;
-            _configService = configService;
+            
         }
+
         //GET api/projects?search=crm
         [HttpGet]
         public IActionResult GetAll(string search = "")
         {            
-            return Ok(_configService.GetValue());
+            //return Ok(_configService.GetValue());
+            return Ok();
         }
 
         //GET api/projects/23
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            throw new Exception();
+            //throw new Exception();
             return Ok();
         }
 
@@ -37,12 +44,12 @@ namespace DevFreela.API.Controllers
         [HttpPost]
         public IActionResult Post(ProjectCreateInputModel model)
         {
-            if (model.TotalCost < _totalCostConfig.Minimum ||
-                model.TotalCost > _totalCostConfig.Maximum)
-            {
-                return BadRequest($"Valor do projeto fora do intervalo permitido." +
-                    $" Deve estar entre {_totalCostConfig.Minimum} e {_totalCostConfig.Maximum}.");
-            }
+            //if (model.TotalCost < _totalCostConfig.Minimum ||
+            //    model.TotalCost > _totalCostConfig.Maximum)
+            //{
+            //    return BadRequest($"Valor do projeto fora do intervalo permitido." +
+            //        $" Deve estar entre {_totalCostConfig.Minimum} e {_totalCostConfig.Maximum}.");
+            //}
             return CreatedAtAction(nameof(GetById), new { id = 1 }, null);
         }
 
@@ -78,7 +85,7 @@ namespace DevFreela.API.Controllers
         [HttpPost("{id}/comments")]
         public IActionResult PostComment(int id, ProjectCreateCommentInputModel model)
         {
-            return CreatedAtAction(nameof(PostComment), model.IdProject, model.Content);
+            return CreatedAtAction(nameof(GetById), model.IdProject, model.Content);
         }
     }
 }
