@@ -1,4 +1,5 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using DevFreela.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
+
         //private readonly FreelanceTotalCostConfig _totalCostConfig;
         //private readonly IConfigService _configService;        
         //public ProjectsController(IOptions<FreelanceTotalCostConfig> options, IConfigService configService)
@@ -19,9 +21,10 @@ namespace DevFreela.API.Controllers
         //    _configService = configService;
         //}
 
-        public ProjectsController()
+        private readonly DevFreelaDbContext _context;
+        public ProjectsController(DevFreelaDbContext context)
         {
-            
+            _context = context;
         }
 
         //GET api/projects?search=crm

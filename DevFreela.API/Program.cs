@@ -1,6 +1,8 @@
 using DevFreela.API.ExceptionHandler;
 using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using DevFreela.API.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<FreelanceTotalCostConfig>(builder.Configuration.GetSection("FreelanceTotalCostConfig"));//exemplo config option
 
 builder.Services.AddSingleton<IConfigService, ConfigService>();//exemplo injecao dependencia
+
+builder.Services.AddDbContext<DevFreelaDbContext>(options =>
+    options.UseInMemoryDatabase("DevFreelaDb"));//exemplo banco de dados em memoria
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();//exemplo exception handler***
 builder.Services.AddProblemDetails();//em caso de erro (exception), adicionar detalhes***
