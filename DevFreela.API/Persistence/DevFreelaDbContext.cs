@@ -35,7 +35,7 @@ namespace DevFreela.API.Persistence
             {
                 e.HasKey(u => u.Id);
 
-                e.HasMany(u => u.Skills)
+                e.HasMany(u => u.UserSkills)
                           .WithOne(us => us.User)
                           .HasForeignKey(us => us.IdUser)
                           .OnDelete(DeleteBehavior.Restrict);                
@@ -66,7 +66,7 @@ namespace DevFreela.API.Persistence
                     .HasForeignKey(p => p.IdClient)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                e.HasOne(p => p.Freelance)
+                e.HasOne(p => p.Freelancer)
                     .WithMany(u => u.FreelanceProjects)
                     .HasForeignKey(p => p.IdFreelancer)
                     .OnDelete(DeleteBehavior.Restrict);

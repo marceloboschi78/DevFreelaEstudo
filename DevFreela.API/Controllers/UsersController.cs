@@ -1,6 +1,9 @@
-﻿using DevFreela.API.Models;
+﻿using DevFreela.API.Entities;
+using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.API.Controllers
 {
@@ -8,25 +11,54 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly DevFreelaDbContext _context;
+        public UsersController(DevFreelaDbContext context)
+        {
+            _context = context;
+        }
+
         //GET api/users/23
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok();
+            var user = _context.Users
+                .Include(u => u.UserSkills)
+                    .ThenInclude(us => us.Skill)
+                .SingleOrDefault(u => u.Id == id);                
+
+            if (user == null)
+            {
+                return NotFound($"Não foi encontrado usuário com id = {id}.");
+            }
+
+            var model = UserViewModel.FromEntity(user);
+
+            return Ok(model);
         }
 
         //POST api/users
         [HttpPost]
         public IActionResult Post(UserCreateInputModel model)
         {
-            return CreatedAtAction(nameof(GetById), new {id = 1}, null);
+            var user = model.ToEntity();
+            var IdUser = user.Id;
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetById), IdUser, model);
         }
 
         //POST api/users/23/skills
         [HttpPost("{id}/skills")]
         public IActionResult PostSkills(int id, UserSkillCreateInputModel model)
         {
-            return CreatedAtAction(nameof(GetById), new { id = 1 }, null);
+            var userSkills = model.SkillIds.Select(skillId => new UserSkill(id, skillId)).ToList();
+
+            _context.UserSkills.AddRange(userSkills);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetById), id, model);
         }
 
         //PUT api/users/23/profile-picture

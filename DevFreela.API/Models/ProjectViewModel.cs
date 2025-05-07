@@ -36,10 +36,9 @@ namespace DevFreela.API.Models
                 entity.IdFreelancer,
                 entity.IdClient,
                 entity.Client.FullName,
-                entity.Freelance.FullName,
+                entity.Freelancer.FullName,
                 entity.TotalCost,
                 entity.Comments);
-
         }
     }
 }
