@@ -175,12 +175,12 @@ namespace DevFreela.API.Controllers
                 return NotFound($"Não encontrado projeto com id = {id}.");
             }
 
-            var comment = new ProjectComment(model.Content, model.IdProject, model.IdUser);
+            var comment = new ProjectComment(model.Content, id, model.IdUser);
 
             _context.ProjectComments.Add(comment);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), model.IdProject, model.Content);
+            return CreatedAtAction(nameof(GetById), new { id = id}, model.Content);
         }
     }
 }
