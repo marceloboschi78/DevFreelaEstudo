@@ -54,6 +54,7 @@ namespace DevFreela.API.Controllers
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
                 .Include(p => p.Comments)
+                .Where(p => !p.IsDeleted)
                 .SingleOrDefault(p => p.Id == id);
 
             if (project == null)
@@ -78,12 +79,13 @@ namespace DevFreela.API.Controllers
             //}
             
             var project = model.ToEntity();
-            int idProject = project.Id;
 
             _context.Projects.Add(project);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), idProject, model);
+            int idProject = project.Id;
+            
+            return CreatedAtAction(nameof(GetById), new { id = idProject }, model);
         }
 
         //PUT api/projects/23

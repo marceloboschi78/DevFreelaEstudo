@@ -4,6 +4,7 @@ using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace DevFreela.API.Controllers
 {
@@ -41,12 +42,13 @@ namespace DevFreela.API.Controllers
         public IActionResult Post(UserCreateInputModel model)
         {
             var user = model.ToEntity();
-            var IdUser = user.Id;
 
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), IdUser, model);
+            var IdUser = user.Id;            
+
+            return CreatedAtAction(nameof(GetById), new { id = IdUser }, model);            
         }
 
         //POST api/users/23/skills
@@ -58,7 +60,7 @@ namespace DevFreela.API.Controllers
             _context.UserSkills.AddRange(userSkills);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), id, model);
+            return CreatedAtAction(nameof(GetById), new { id = id }, model);
         }
 
         //PUT api/users/23/profile-picture
