@@ -14,7 +14,7 @@ namespace DevFreela.Application.Services
             _context = context;
         }
 
-        public ResultViewModel<List<ProjectItemViewModel>> GetAll(string search, int page = 0, int size = 3)
+        public ResultViewModel<List<ProjectItemViewModel>> GetAll(string search, int page, int size)
         {
             var projects = _context.Projects
                .Include(p => p.Client)
@@ -124,13 +124,13 @@ namespace DevFreela.Application.Services
 
             return ResultViewModel.Success();
         }
-        public ResultViewModel InsertComment(int id, ProjectCommentCreateInputModel model)
+        public ResultViewModel<string> InsertComment(int id, ProjectCommentCreateInputModel model)
         {
             var project = _context.Projects.SingleOrDefault(p => p.Id == id);
 
             if (project is null)
             {
-                return ResultViewModel.Error($"Não encontrado projeto com id = {id}.");
+                return ResultViewModel<string>.Error($"Não encontrado projeto com id = {id}.");
             }
 
             var comment = new ProjectComment(model.Content, id, model.IdUser);
@@ -138,7 +138,7 @@ namespace DevFreela.Application.Services
             _context.ProjectComments.Add(comment);
             _context.SaveChanges();
 
-            return ResultViewModel.Success();
+            return ResultViewModel<string>.Success(comment.Content);
         }
     }
 }
