@@ -1,4 +1,4 @@
-﻿namespace DevFreela.API.Services
+﻿namespace DevFreela.Application.Services
 {
     public interface IConfigService
     {

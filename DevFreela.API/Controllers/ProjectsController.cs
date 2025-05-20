@@ -164,7 +164,7 @@ namespace DevFreela.API.Controllers
 
         //POST api/projects/23/comments
         [HttpPost("{id}/comments")]
-        public IActionResult PostComment(int id, ProjectCreateCommentInputModel model)
+        public IActionResult PostComment(int id, ProjectCommentCreateInputModel model)
         {
             var project = _context.Projects.SingleOrDefault(p => p.Id == id);
 
