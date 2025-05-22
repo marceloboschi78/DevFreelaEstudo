@@ -43,16 +43,16 @@ namespace DevFreela.Application.Services
             return ResultViewModel<int>.Success(IdUser);
         }
 
-        public ResultViewModel<List<string>> InsertSkill(int id, UserSkillCreateInputModel model)
+        public ResultViewModel<int> InsertSkill(int id, UserSkillCreateInputModel model)
         {
-            var userSkills = model.SkillIds.Select(skillId => new UserSkill(id, skillId)).ToList();
+            var userSkills = model.SkillIds
+                .Select(skillId => new UserSkill(id, skillId))                                
+                .ToList();           
 
-            var skills = userSkills.Select(us => us.Skill.Description).ToList();
-            
             _context.UserSkills.AddRange(userSkills);
-            _context.SaveChanges();
+            _context.SaveChanges();            
 
-            return ResultViewModel<List<string>>.Success(skills);
+            return ResultViewModel<int>.Success(model.IdUser);
         }
 
         public ResultViewModel<string> ProfilePicture(int id, IFormFile file)

@@ -44,7 +44,7 @@ namespace DevFreela.API.Controllers
         {
             var result = _userService.InsertSkill(id, model);           
 
-            return CreatedAtAction(nameof(GetById), new { id = id }, result.Data);
+            return CreatedAtAction(nameof(GetById), new { id = id }, null);
         }
 
         //PUT api/users/23/profile-picture
