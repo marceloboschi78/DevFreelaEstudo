@@ -1,4 +1,5 @@
-﻿using DevFreela.Application.Services;
+﻿using DevFreela.Application.CQRS.Commands;
+using DevFreela.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DevFreela.Application
@@ -9,6 +10,7 @@ namespace DevFreela.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddServices();
+            services.AddHandlers();
 
             return services;
         }
@@ -20,6 +22,14 @@ namespace DevFreela.Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISkillService, SkillService>();
 
+            return services;
+        }
+
+        private static IServiceCollection AddHandlers(this IServiceCollection services)
+        {
+            services.AddMediatR(config =>
+                config.RegisterServicesFromAssemblyContaining<ProjectInsertCommand>());
+            
             return services;
         }
     }

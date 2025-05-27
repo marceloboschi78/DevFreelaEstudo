@@ -1,6 +1,7 @@
-﻿using DevFreela.Application.Models;
-using Microsoft.AspNetCore.Mvc;
-using DevFreela.Application.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using DevFreela.Application.CQRS.Queries;
+using DevFreela.Application.CQRS.Commands;
 
 namespace DevFreela.API.Controllers
 {
@@ -17,30 +18,34 @@ namespace DevFreela.API.Controllers
         //    _configService = configService;
         //}
         
-        private readonly IProjectService _projectService;
-    
-        public ProjectsController(IProjectService projectService)
-        {
-            _projectService = projectService;
+        
+        private readonly IMediator _mediator;
+
+        public ProjectsController(IMediator mediator)
+        {            
+            _mediator = mediator;
         }
 
         //GET api/projects?search=crm
         [HttpGet]
-        public IActionResult GetAll(string search = "", int page = 0, int size = 15)
+        public async Task<IActionResult> GetAll(string search = "", int page = 0, int size = 15)
         {
             //return Ok(_configService.GetValue());
-            var result = _projectService.GetAll(search, page, size);
+            //var result = _projectService.GetAll(search, page, size);
+
+            var query = new ProjectGetAllQuery(search, page, size);
+            var result = await _mediator.Send(query);
 
             return Ok(result.Data);
         }
 
         //GET api/projects/23
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             //throw new Exception();
-            
-            var result = _projectService.GetById(id);
+                        
+            var result = await _mediator.Send(new ProjectGetByIdQuery(id));
             
             if (!result.IsSuccess)
             {
@@ -52,7 +57,7 @@ namespace DevFreela.API.Controllers
 
         //POST api/projects
         [HttpPost]
-        public IActionResult Post(ProjectCreateInputModel model)
+        public async Task<IActionResult> Post(ProjectInsertCommand command)
         {
             //if (model.TotalCost < _totalCostConfig.Minimum ||
             //    model.TotalCost > _totalCostConfig.Maximum)
@@ -61,16 +66,16 @@ namespace DevFreela.API.Controllers
             //        $" Deve estar entre {_totalCostConfig.Minimum} e {_totalCostConfig.Maximum}.");
             //}
             
-            var result = _projectService.Insert(model);
+            var result = await _mediator.Send(command);
                         
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
         }
 
         //PUT api/projects/23
         [HttpPut("{id}")]
-        public IActionResult Put(int id, ProjectUpdateInputModel model)
+        public async Task<IActionResult> Put(int id, ProjectUpdateCommand command)
         {
-            var result = _projectService.Update(id, model);
+            var result = await _mediator.Send(command);
             
             if (!result.IsSuccess)
             {
@@ -82,9 +87,9 @@ namespace DevFreela.API.Controllers
 
         //DELETE api/projects/23
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _projectService.Delete(id);
+            var result = await _mediator.Send(new ProjectDeleteCommand(id));
 
             if (!result.IsSuccess)
             {
@@ -96,9 +101,9 @@ namespace DevFreela.API.Controllers
 
         //PUT api/projects/23/start
         [HttpPut("{id}/start")]
-        public IActionResult Start(int id)
+        public async Task<IActionResult> Start(int id)
         {
-            var result = _projectService.Start(id);
+            var result = await _mediator.Send(new ProjectStartCommand(id));
 
             if (!result.IsSuccess)
             {
@@ -110,9 +115,9 @@ namespace DevFreela.API.Controllers
 
         //PUT api/projects/23/complete
         [HttpPut("{id}/complete")]
-        public IActionResult Complete(int id)
+        public async Task<IActionResult> Complete(int id)
         {
-            var result = _projectService.Complete(id);
+            var result = await _mediator.Send(new ProjectCompleteCommand(id));
 
             if (!result.IsSuccess)
             {
@@ -124,16 +129,16 @@ namespace DevFreela.API.Controllers
 
         //POST api/projects/23/comments
         [HttpPost("{id}/comments")]
-        public IActionResult PostComment(int id, ProjectCommentCreateInputModel model)
+        public async Task<IActionResult> PostComment(int id, ProjectInsertCommentCommand command)
         {
-            var result = _projectService.InsertComment(id, model);
+            var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
             {
                 return NotFound(result.Message);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = id}, model.Content);
+            return CreatedAtAction(nameof(GetById), new { id = id}, command.Content);
         }
     }
 }

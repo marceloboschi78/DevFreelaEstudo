@@ -1,5 +1,4 @@
 ﻿using DevFreela.Application.Models;
-using DevFreela.Core.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace DevFreela.Application.Services

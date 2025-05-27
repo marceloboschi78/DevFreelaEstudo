@@ -1,5 +1,6 @@
-﻿using DevFreela.Application.Models;
-using DevFreela.Application.Services;
+﻿using DevFreela.Application.CQRS.Commands;
+using DevFreela.Application.CQRS.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
@@ -7,19 +8,18 @@ namespace DevFreela.API.Controllers
     [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
-    {       
-        private readonly IUserService _userService;       
-
-        public UsersController(IUserService userService)
+    {
+        private readonly IMediator _mediator;
+        public UsersController(IMediator mediator)
         {
-            _userService = userService;
-        }
+            _mediator = mediator;
+        }       
 
         //GET api/users/23
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _userService.GetById(id);                
+            var result = await _mediator.Send(new UserGetByIdQuery(id));
 
             if (!result.IsSuccess)
             {
@@ -31,27 +31,27 @@ namespace DevFreela.API.Controllers
 
         //POST api/users
         [HttpPost]
-        public IActionResult Post(UserCreateInputModel model)
+        public async Task<IActionResult> Post(UserInsertCommand command)
         {
-            var result = _userService.Insert(model);            
+            var result = await _mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);            
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);            
         }
 
         //POST api/users/23/skills
         [HttpPost("{id}/skills")]
-        public IActionResult PostSkills(int id, UserSkillCreateInputModel model)
+        public async Task<IActionResult> PostSkills(int id, UserInsertSkillCommand command)
         {
-            var result = _userService.InsertSkill(id, model);           
+            var result = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(GetById), new { id = id }, null);
         }
 
         //PUT api/users/23/profile-picture
         [HttpPut("{id}/profile-picture")]
-        public IActionResult PostProfilePicture(int id, IFormFile file)
+        public async Task<IActionResult> PostProfilePicture(int id, IFormFile file)
         {
-            var result = _userService.ProfilePicture(id, file);
+            var result = await _mediator.Send(new UserProfilePictureCommand(id, file));
 
             return Ok(result.Data);
         }

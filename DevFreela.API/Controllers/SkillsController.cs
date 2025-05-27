@@ -1,5 +1,6 @@
-﻿using DevFreela.Application.Models;
-using DevFreela.Application.Services;
+﻿using DevFreela.Application.CQRS.Commands;
+using DevFreela.Application.CQRS.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
@@ -7,28 +8,28 @@ namespace DevFreela.API.Controllers
     [Route("api/skills")]
     [ApiController]
     public class SkillsController : ControllerBase
-    {        
-        private readonly ISkillService _skillService;        
+    {           
+        private readonly IMediator _mediator;      
 
-        public SkillsController(ISkillService skillService)
+        public SkillsController(IMediator mediator)
         {
-            _skillService = skillService;
+            _mediator = mediator;
         }
 
         //GET api/skills
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _skillService.GetAll();
+            var result = await _mediator.Send(new SkillGetAllQuery());
             
             return Ok(result.Data);
         }
 
         //POST api/skills
         [HttpPost]
-        public IActionResult Post(SkillCreateInputModel model)
+        public async Task<IActionResult> Post(SkillInsertCommand command)
         {
-            var result = _skillService.Insert(model);            
+            var result = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(GetAll),null, result.Data);
         }
