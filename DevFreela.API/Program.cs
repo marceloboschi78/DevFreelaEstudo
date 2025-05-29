@@ -4,6 +4,7 @@ using DevFreela.Application.Models;
 using DevFreela.Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using DevFreela.Application;
+using DevFreela.Infraestructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +17,9 @@ builder.Services.AddSingleton<IConfigService, ConfigService>();//exemplo injecao
 //builder.Services.AddDbContext<DevFreelaDbContext>(options =>
 //    options.UseInMemoryDatabase("DevFreelaDb"));//exemplo banco de dados em memoria
 
-var connectionString = builder.Configuration.GetConnectionString("DevFreelaCS");
-builder.Services.AddDbContext<DevFreelaDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddApplication();//padrao result camada de aplicação
+builder.Services
+    .AddApplication()//padrao result camada de aplicação
+    .AddInfrastructure(builder.Configuration);//aplication Module, repository
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();//exemplo exception handler***
 builder.Services.AddProblemDetails();//em caso de erro (exception), adicionar detalhes***

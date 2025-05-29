@@ -1,34 +1,24 @@
 ﻿using DevFreela.Application.Models;
 using DevFreela.Core.Entities;
-using DevFreela.Infraestructure.Persistence;
+using DevFreela.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.Application.CQRS.Commands
 {
     public class ProjectInsertCommentCommandHandler : IRequestHandler<ProjectInsertCommentCommand, ResultViewModel<string>>
     {
-        private readonly DevFreelaDbContext _context;
-
-        public ProjectInsertCommentCommandHandler(DevFreelaDbContext context)
+        private readonly IProjectRepository _repository;
+        
+        public ProjectInsertCommentCommandHandler(IProjectRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
+
         public async Task<ResultViewModel<string>> Handle(ProjectInsertCommentCommand request, CancellationToken cancellationToken)
         {
-            var project = await _context.Projects.SingleOrDefaultAsync(p => p.Id == request.IdProject);
+            await _repository.AddComment(new ProjectComment(request.Content, request.IdProject, request.IdUser));
 
-            if (project is null)
-            {
-                return ResultViewModel<string>.Error($"Não encontrado projeto com id = {request.IdProject}.");
-            }
-
-            var comment = new ProjectComment(request.Content, request.IdProject, request.IdUser);
-
-            await _context.ProjectComments.AddAsync(comment);
-            await _context.SaveChangesAsync();
-
-            return ResultViewModel<string>.Success(comment.Content);
+            return ResultViewModel<string>.Success(request.Content);
         }
     }
 }

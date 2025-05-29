@@ -1,23 +1,22 @@
 ﻿using DevFreela.Application.Models;
-using DevFreela.Infraestructure.Persistence;
+using DevFreela.Core.Repositories;
 using MediatR;
 
 namespace DevFreela.Application.CQRS.Commands
 {
     public class UserInsertCommandHandler : IRequestHandler<UserInsertCommand, ResultViewModel<int>>
     {
-        private readonly DevFreelaDbContext _context;
+        private readonly IUserRepository _repository;
 
-        public UserInsertCommandHandler(DevFreelaDbContext context)
+        public UserInsertCommandHandler(IUserRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
         public async Task<ResultViewModel<int>> Handle(UserInsertCommand request, CancellationToken cancellationToken)
         {
             var user = request.ToEntity();
 
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await _repository.Add(user);
 
             var IdUser = user.Id;
 

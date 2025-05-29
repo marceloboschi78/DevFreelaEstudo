@@ -35,7 +35,7 @@ namespace DevFreela.API.Controllers
         {
             var result = await _mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);            
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, null);            
         }
 
         //POST api/users/23/skills

@@ -20,9 +20,7 @@ namespace DevFreela.Application
         //adicionar serviços aqui
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IProjectService, ProjectService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ISkillService, SkillService>();
+            // removidos apos CQRS
 
             return services;
         }
@@ -32,7 +30,7 @@ namespace DevFreela.Application
             services.AddMediatR(config =>
                 config.RegisterServicesFromAssemblyContaining<ProjectInsertCommand>());
             
-            services.AddTransient<IPipelineBehavior<ProjectInsertCommand, ResultViewModel<int>>, ProjectInsertCommandValidateBehavior>();
+            services.AddTransient<IPipelineBehavior<ProjectInsertCommand, ResultViewModel<int>>, ProjectInsertCommandValidateBehavior>(); //ex de decorator
 
             return services;
         }

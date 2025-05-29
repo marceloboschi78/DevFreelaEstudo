@@ -1,23 +1,22 @@
 ﻿using DevFreela.Application.Models;
-using DevFreela.Infraestructure.Persistence;
+using DevFreela.Core.Repositories;
 using MediatR;
 
 namespace DevFreela.Application.CQRS.Commands
 {
     public class UserProfilePictureCommandHandler : IRequestHandler<UserProfilePictureCommand, ResultViewModel<string>>
     {
-        private readonly DevFreelaDbContext _context;
+        private readonly IUserRepository _repository;
 
-        public UserProfilePictureCommandHandler(DevFreelaDbContext context)
+        public UserProfilePictureCommandHandler(IUserRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
+
         public async Task<ResultViewModel<string>> Handle(UserProfilePictureCommand request, CancellationToken cancellationToken)
         {
-            var description = $"File: {request.Picture.FileName} - Size: {request.Picture.Length} bytes";
-
-            //processar imagem
-
+            var description = await _repository.ProfilePicture(request.Picture, request.Id);            
+             
             return ResultViewModel<string>.Success(description);
         }
     }
