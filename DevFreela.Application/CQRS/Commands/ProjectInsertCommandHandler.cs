@@ -8,10 +8,10 @@ namespace DevFreela.Application.CQRS.Commands
     public class ProjectInsertCommandHandler : IRequestHandler<ProjectInsertCommand, ResultViewModel<int>>
     {
         private readonly IProjectRepository _repository;
-        private readonly IMediator _mediator;
+        private readonly IMediator _mediator;        
 
         public ProjectInsertCommandHandler(IMediator mediator, IProjectRepository repository)
-        {            
+        {
             _mediator = mediator;
             _repository = repository;
         }

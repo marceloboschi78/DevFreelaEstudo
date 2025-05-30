@@ -1,6 +1,8 @@
-﻿using DevFreela.Application.CQRS.Commands;
+﻿using DevFreela.API.Validators;
+using DevFreela.Application.CQRS.Commands;
 using DevFreela.Application.Models;
 using DevFreela.Application.Services;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,7 @@ namespace DevFreela.Application
         {
             services.AddServices();
             services.AddHandlers();
+            services.AddValidation();
 
             return services;
         }
@@ -29,9 +32,16 @@ namespace DevFreela.Application
         {
             services.AddMediatR(config =>
                 config.RegisterServicesFromAssemblyContaining<ProjectInsertCommand>());
-            
+
             services.AddTransient<IPipelineBehavior<ProjectInsertCommand, ResultViewModel<int>>, ProjectInsertCommandValidateBehavior>(); //ex de decorator
 
+            return services;
+        }
+
+        private static IServiceCollection AddValidation(this IServiceCollection services)
+        {
+            services.AddValidatorsFromAssemblyContaining<ProjectInsertCommandValidator>();
+            
             return services;
         }
     }

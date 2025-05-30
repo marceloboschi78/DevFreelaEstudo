@@ -2,6 +2,7 @@
 using MediatR;
 using DevFreela.Application.CQRS.Queries;
 using DevFreela.Application.CQRS.Commands;
+using FluentValidation;
 
 namespace DevFreela.API.Controllers
 {
@@ -20,10 +21,12 @@ namespace DevFreela.API.Controllers
         
         
         private readonly IMediator _mediator;
+        private readonly IValidator<ProjectInsertCommand> _projectInsertCommandValidator;
 
-        public ProjectsController(IMediator mediator)
-        {            
+        public ProjectsController(IMediator mediator, IValidator<ProjectInsertCommand> projectInsertCommandValidator)
+        {
             _mediator = mediator;
+            _projectInsertCommandValidator = projectInsertCommandValidator;
         }
 
         //GET api/projects?search=crm
@@ -65,7 +68,8 @@ namespace DevFreela.API.Controllers
             //    return BadRequest($"Valor do projeto fora do intervalo permitido." +
             //        $" Deve estar entre {_totalCostConfig.Minimum} e {_totalCostConfig.Maximum}.");
             //}
-            
+            await _projectInsertCommandValidator.ValidateAndThrowAsync(command);
+
             var result = await _mediator.Send(command);
 
             if(!result.IsSuccess)
