@@ -19,13 +19,11 @@ namespace DevFreela.Application.CQRS.Commands
         {
             var project = request.ToEntity();
 
-            await _repository.Add(project);
+            var idProject = await _repository.Add(project);
 
             var projectCreated = new ProjectCreatedNotification(project.Id, project.Title, project.TotalCost);
             await _mediator.Publish(projectCreated, cancellationToken);
-
-            int idProject = project.Id;
-
+            
             return ResultViewModel<int>.Success(idProject);
         }
     }

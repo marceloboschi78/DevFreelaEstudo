@@ -2,7 +2,7 @@
 
 namespace DevFreela.Application.Notification
 {
-    public class FreelanceNotoficationHandler : INotificationHandler<ProjectCreatedNotification>
+    public class FreelanceNotificationHandler : INotificationHandler<ProjectCreatedNotification>
     {
         public Task Handle(ProjectCreatedNotification notification, CancellationToken cancellationToken)
         {

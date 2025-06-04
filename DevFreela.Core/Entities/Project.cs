@@ -4,9 +4,10 @@ namespace DevFreela.Core.Entities
 {
     public class Project : BaseEntity
     {
+        public const string INVALID_STATE_MESSAGE = "The project is not in a valid state to perform this operation.";
         protected Project() //construtor vazio para o reflection do EFCore
         {
-            
+
         }
         public Project(string title, string description, int idClient, int idFreelancer, decimal totalCost)
             : base()
@@ -39,16 +40,21 @@ namespace DevFreela.Core.Entities
             {
                 Status = ProjectStatusEnum.Cancelled;
             }
+            else
+            {
+                throw new InvalidOperationException(INVALID_STATE_MESSAGE);
+            }
         }
 
         public void Start()
         {
-            if (Status == ProjectStatusEnum.Created)
+            if (Status != ProjectStatusEnum.Created)
             {
-                Status = ProjectStatusEnum.InProgress;
-                StartedAt = DateTime.Now;
+                throw new InvalidOperationException(INVALID_STATE_MESSAGE);
             }
 
+            Status = ProjectStatusEnum.InProgress;
+            StartedAt = DateTime.Now;
         }
 
         public void Complete()
@@ -58,14 +64,19 @@ namespace DevFreela.Core.Entities
                 Status = ProjectStatusEnum.Completed;
                 CompletedAt = DateTime.Now;
             }
+            else
+            {
+                throw new InvalidOperationException(INVALID_STATE_MESSAGE);
+            }
         }
 
         public void SetPaymentPending()
         {
-            if (Status == ProjectStatusEnum.InProgress)
+            if (Status != ProjectStatusEnum.InProgress)
             {
-                Status = ProjectStatusEnum.PaymentPending;
+                throw new InvalidOperationException(INVALID_STATE_MESSAGE);
             }
+                Status = ProjectStatusEnum.PaymentPending;
         }
 
         public void Update(string title, string description, decimal totalCost)

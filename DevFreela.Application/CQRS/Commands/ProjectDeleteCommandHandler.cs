@@ -6,6 +6,7 @@ namespace DevFreela.Application.CQRS.Commands
 {
     public class ProjectDeleteCommandHandler : IRequestHandler<ProjectDeleteCommand, ResultViewModel>
     {
+        public const string PROJECT_NOT_FOUND_MESSAGE = "Projeto não encontrado.";
         private readonly IProjectRepository _repository;
         
         public ProjectDeleteCommandHandler(IProjectRepository repository)
@@ -19,7 +20,7 @@ namespace DevFreela.Application.CQRS.Commands
 
             if (project is null)
             {
-                return ResultViewModel.Error($"Não encontrado projeto com id = {request.Id}.");
+                return ResultViewModel.Error(PROJECT_NOT_FOUND_MESSAGE);
             }
 
             project.SetAsDeleted();
