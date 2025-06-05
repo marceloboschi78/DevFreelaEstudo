@@ -1,6 +1,7 @@
 ﻿using DevFreela.Application.CQRS.Commands;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
+using FluentAssertions;
 using Moq;
 using NSubstitute;
 
@@ -28,6 +29,8 @@ namespace DevFreela.UnitTests.Application
 
             //assert
             Assert.True(result.IsSuccess);
+            result.IsSuccess.Should().BeTrue(); //fluent Assertions
+
             await repository.Received(1).GetById(Arg.Any<int>());
             await repository.Received(1).Update(Arg.Any<Project>());
         }
@@ -50,6 +53,10 @@ namespace DevFreela.UnitTests.Application
             //assert
             Assert.False(result.IsSuccess);
             Assert.True(result.Message == ProjectDeleteCommandHandler.PROJECT_NOT_FOUND_MESSAGE);
+
+            result.IsSuccess.Should().BeFalse(); //fluent Assertions
+            result.Message.Should().Be(ProjectDeleteCommandHandler.PROJECT_NOT_FOUND_MESSAGE);
+
             await repository.Received(1).GetById(Arg.Any<int>());
             await repository.DidNotReceive().Update(Arg.Any<Project>());
         }

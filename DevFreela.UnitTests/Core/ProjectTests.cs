@@ -1,5 +1,6 @@
 ﻿using DevFreela.Core.Entities;
 using DevFreela.Core.Enums;
+using FluentAssertions;
 
 namespace DevFreela.UnitTests.Core
 {
@@ -18,6 +19,10 @@ namespace DevFreela.UnitTests.Core
             Assert.Equal(ProjectStatusEnum.InProgress, project.Status);
             Assert.NotNull(project.StartedAt);
             Assert.True(project.Status == ProjectStatusEnum.InProgress);
+
+            project.Status.Should().Be(ProjectStatusEnum.InProgress); //fluent Assertions
+            project.StartedAt.Should().NotBeNull(); 
+            
         }
 
         [Fact]
@@ -32,6 +37,10 @@ namespace DevFreela.UnitTests.Core
 
             var exception = Assert.Throws<InvalidOperationException>(start);
             Assert.Equal(Project.INVALID_STATE_MESSAGE, exception.Message);
+
+            start.Should()//fluent assertions
+                .Throw<InvalidOperationException>()
+                .WithMessage(Project.INVALID_STATE_MESSAGE);
         }
 
         [Fact]
@@ -39,13 +48,16 @@ namespace DevFreela.UnitTests.Core
         {
             //Arrange
             var project = new Project("Projeto A", "Descricao do Projeto", 1, 2, 10000);
-            project.Start(); // Mudar o estado do projeto para InProgress
-            project.Complete(); // mudar o estado do projeto para Completed
+            project.Start(); //  estado InProgress
+            project.Complete(); // estado Completed
             //Act
             Action complete = project.Complete;
             //Assert
             var exception = Assert.Throws<InvalidOperationException>(complete); 
             Assert.Equal(Project.INVALID_STATE_MESSAGE, exception.Message);
+           
+            complete.Should() .Throw<InvalidOperationException>()//fluent assertions
+                .WithMessage(Project.INVALID_STATE_MESSAGE);
         }
         [Fact]
         public void ProjectIsInProgress_Complete_Success()
@@ -58,6 +70,9 @@ namespace DevFreela.UnitTests.Core
             //Assert
             Assert.Equal(ProjectStatusEnum.Completed, project.Status);
             Assert.NotNull(project.CompletedAt);
+
+            project.Status.Should().Be(ProjectStatusEnum.Completed); //fluent Assertions
+            project.CompletedAt.Should().NotBeNull();
         }
         [Fact]
         public void ProjectPaymentPending_Complete_Success()

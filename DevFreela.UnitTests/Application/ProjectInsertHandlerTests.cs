@@ -2,6 +2,7 @@
 using DevFreela.Application.Notification;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
+using FluentAssertions;
 using MediatR;
 using Moq;
 using NSubstitute;
@@ -77,8 +78,11 @@ namespace DevFreela.UnitTests.Application
 
             //assert
             Assert.True(result.IsSuccess);
+            result.IsSuccess.Should().BeTrue();//fluent assertions
+
             Assert.Equal(ID, result.Data);
-            
+            result.Data.Should().Be(ID);//fluent assertions
+
             //mock.Verify(r => r.Add(It.IsAny<Project>()), Times.Once);
             Mock.Get(repository).Verify(r => r.Add(It.IsAny<Project>()), Times.Once);
             Mock.Get(mediator).Verify(m => m.Publish(It.IsAny<ProjectCreatedNotification>(), It.IsAny<CancellationToken>()), Times.Once);
