@@ -1,4 +1,4 @@
-﻿using DevFreela.Application.CQRS.Commands;
+﻿using DevFreela.Application.Commands;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using FluentAssertions;

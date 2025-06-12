@@ -2,7 +2,7 @@
 using DevFreela.Infraestructure.Persistence;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Commands
+namespace DevFreela.Application.Commands
 {
     public class ProjectInsertCommandValidateBehavior : IPipelineBehavior<ProjectInsertCommand, ResultViewModel<int>>
     {

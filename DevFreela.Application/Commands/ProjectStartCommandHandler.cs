@@ -4,7 +4,7 @@ using DevFreela.Infraestructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevFreela.Application.CQRS.Commands
+namespace DevFreela.Application.Commands
 {
     public class ProjectStartCommandHandler : IRequestHandler<ProjectStartCommand, ResultViewModel>
     {

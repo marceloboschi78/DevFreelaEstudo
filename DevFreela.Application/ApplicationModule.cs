@@ -1,5 +1,5 @@
 ﻿using DevFreela.API.Validators;
-using DevFreela.Application.CQRS.Commands;
+using DevFreela.Application.Commands;
 using DevFreela.Application.Models;
 using DevFreela.Application.Services;
 using FluentValidation;

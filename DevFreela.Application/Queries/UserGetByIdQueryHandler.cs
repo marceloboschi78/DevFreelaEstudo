@@ -2,7 +2,7 @@
 using DevFreela.Core.Repositories;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Queries
+namespace DevFreela.Application.Queries
 {
     public class UserGetByIdQueryHandler : IRequestHandler<UserGetByIdQuery, ResultViewModel<UserViewModel>>
     {

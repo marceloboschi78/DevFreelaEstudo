@@ -1,5 +1,5 @@
-﻿using DevFreela.Application.CQRS.Commands;
-using DevFreela.Application.CQRS.Queries;
+﻿using DevFreela.Application.Commands;
+using DevFreela.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

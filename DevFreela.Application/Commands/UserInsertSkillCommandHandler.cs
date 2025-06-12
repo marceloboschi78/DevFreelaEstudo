@@ -3,7 +3,7 @@ using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Commands
+namespace DevFreela.Application.Commands
 {
     public class UserInsertSkillCommandHandler : IRequestHandler<UserInsertSkillCommand, ResultViewModel<int>>
     {

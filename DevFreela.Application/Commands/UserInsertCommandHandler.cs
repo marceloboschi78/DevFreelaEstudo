@@ -2,7 +2,7 @@
 using DevFreela.Core.Repositories;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Commands
+namespace DevFreela.Application.Commands
 {
     public class UserInsertCommandHandler : IRequestHandler<UserInsertCommand, ResultViewModel<int>>
     {

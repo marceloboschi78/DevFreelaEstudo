@@ -2,7 +2,7 @@
 using DevFreela.Application.Models;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Commands
+namespace DevFreela.Application.Commands
 {
     public class ProjectInsertCommentCommand : IRequest<ResultViewModel<string>>
     {

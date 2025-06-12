@@ -2,7 +2,7 @@
 using DevFreela.Core.Repositories;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Queries
+namespace DevFreela.Application.Queries
 {
     public class SkillGetAllQueryHandler : IRequestHandler<SkillGetAllQuery, ResultViewModel<List<SkillViewModel>>>
     {

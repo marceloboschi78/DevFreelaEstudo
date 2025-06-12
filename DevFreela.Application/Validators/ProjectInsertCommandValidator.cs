@@ -1,4 +1,4 @@
-﻿using DevFreela.Application.CQRS.Commands;
+﻿using DevFreela.Application.Commands;
 using FluentValidation;
 
 namespace DevFreela.API.Validators

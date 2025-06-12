@@ -1,7 +1,7 @@
 ﻿using DevFreela.Application.Models;
 using MediatR;
 
-namespace DevFreela.Application.CQRS.Queries
+namespace DevFreela.Application.Queries
 {
     public class UserGetByIdQuery : IRequest<ResultViewModel<UserViewModel>>
     {

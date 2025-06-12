@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using DevFreela.Application.CQRS.Queries;
-using DevFreela.Application.CQRS.Commands;
+using DevFreela.Application.Queries;
 using FluentValidation;
+using DevFreela.Application.Commands;
 
 namespace DevFreela.API.Controllers
 {
